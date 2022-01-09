@@ -35,9 +35,8 @@ module Encoded
     end
 
     def authenticate_request!
-      return head :forbidden unless headers_present?
-
-      ENV['ENCODED_API_KEY'] == request.headers['x-encoded-api-key']
+      return head :forbidden unless request.headers['x-encoded-api-key'].present?
+      return head :forbidden unless ENV['ENCODED_API_KEY'] == request.headers['x-encoded-api-key']
     end
 
     def cache_key
@@ -45,11 +44,6 @@ module Encoded
         request.headers['x-rapidapi-key'],
         permitted_params[:codes].map { |r| r[:data][0..5] }
       ].hash
-    end
-
-    def headers_present?
-      request.headers['x-rapidapi-key'].present? &&
-        request.headers['x-encoded-api-key'].present?
     end
 
     def permitted_params
