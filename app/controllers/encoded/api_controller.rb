@@ -8,7 +8,8 @@ module Encoded
     end
 
     def create
-      assert_limit!
+      assert_request_body! and return
+      assert_limit! and return
 
       encoded =
         Rails.cache.fetch(cache_key, expires_in: 1.hour) do
@@ -27,10 +28,23 @@ module Encoded
       request_size = permitted_params[:codes].length
       request_limit = ENV.fetch('ENCODED_REQUEST_LIMIT') { 100 }.to_i
       if request_size > request_limit
-        return render json: {
-          error: "#{request_size} codes is greater than the request limit of #{request_limit}",
+        render(
+          json: {
+            error: "#{request_size} codes is greater than the request limit of #{request_limit}"
+          },
           status: :unprocessable_entity
-        }
+        )
+      end
+    end
+
+    def assert_request_body!
+      if permitted_params[:codes].blank?
+        render(
+          json: {
+            error: "Invalid request body"
+          },
+          status: :unprocessable_entity
+        )
       end
     end
 
@@ -40,14 +54,11 @@ module Encoded
     end
 
     def cache_key
-      [
-        request.headers['x-rapidapi-key'],
-        permitted_params[:codes].map { |r| r[:data][0..5] }
-      ].hash
+      request.body.to_s.hash
     end
 
     def permitted_params
-      params.permit(codes: [:data, :type, :format])
+      params.permit(codes: %i[data type format])
     end
   end
 end
