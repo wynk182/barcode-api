@@ -2,7 +2,7 @@ RSpec.describe 'Session', type: :request do
   let(:headers) do
     {
       'x-encoded-api-key' => ENV['ENCODED_API_KEY'],
-      'x-rapidapi-key' => 'test'
+      'X-RapidAPI-Proxy-Secret' => ENV['ENCODED_PROXY_SECRET']
     }
   end
 

@@ -8,7 +8,6 @@ module Encoded
     end
 
     def create
-      puts cache_key
       assert_request_body! and return
       assert_limit! and return
 
@@ -50,8 +49,7 @@ module Encoded
     end
 
     def authenticate_request!
-      return head :forbidden unless request.headers['x-encoded-api-key'].present?
-      return head :forbidden unless ENV['ENCODED_API_KEY'] == request.headers['x-encoded-api-key']
+      return head :forbidden unless valid_proxy_secret? || valid_api_key?
     end
 
     def cache_key
@@ -60,6 +58,16 @@ module Encoded
 
     def permitted_params
       params.permit(codes: %i[data type format])
+    end
+
+    def valid_api_key?
+      request.headers['x-encoded-api-key'].present? &&
+        ENV['ENCODED_API_KEY'] == request.headers['x-encoded-api-key']
+    end
+
+    def valid_proxy_secret?
+      request.headers['X-RapidAPI-Proxy-Secret'].present? &&
+        request.headers['X-RapidAPI-Proxy-Secret'] == ENV['ENCODED_PROXY_SECRET']
     end
   end
 end
