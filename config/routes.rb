@@ -1,3 +1,3 @@
 Encoded::Engine.routes.draw do
-  resources :api
+  resources :api, only: [:create]
 end

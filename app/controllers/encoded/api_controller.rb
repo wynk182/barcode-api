@@ -9,7 +9,11 @@ module Encoded
 
     def create
       assert_limit!
-      encoded = Encoded::Generator.generate(permitted_params)
+
+      encoded =
+        Rails.cache.fetch(cache_key, expires_in: 1.hour) do
+          Encoded::Generator.generate(permitted_params)
+        end
       render json: encoded, status: :ok
     rescue NotImplementedError => e
       render json: { error: e.message }, status: :not_implemented
@@ -30,17 +34,24 @@ module Encoded
       end
     end
 
-    def permitted_params
-      params.permit(codes: [:data, :type, :format])
-    end
-
     def authenticate_request!
       return head :forbidden unless headers_present?
+    end
+
+    def cache_key
+      [
+        request.headers['x-rapidapi-key'],
+        permitted_params[:codes].map { |r| r[:data][0..5] }
+      ].hash
     end
 
     def headers_present?
       request.headers['x-rapidapi-host'].present? &&
         request.headers['x-rapidapi-key'].present?
+    end
+
+    def permitted_params
+      params.permit(codes: [:data, :type, :format])
     end
   end
 end
