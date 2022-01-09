@@ -8,6 +8,7 @@ module Encoded
     end
 
     def create
+      puts cache_key
       assert_request_body! and return
       assert_limit! and return
 

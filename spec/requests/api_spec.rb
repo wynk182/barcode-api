@@ -14,8 +14,11 @@ RSpec.describe 'Session', type: :request do
     post '/encoded/api',
          params: {
            codes: [
-             type: 'code_128',
-             data: 'This is a test'
+             {
+              type: 'code_128',
+              data: 'This is a test',
+              format: 'raw'
+             }
            ]
          },
          headers: headers
@@ -29,8 +32,11 @@ RSpec.describe 'Session', type: :request do
     post '/encoded/api',
          params: {
            codes: [
-             type: 'qr_code',
-             data: 'This is a test'
+             {
+              type: 'qr_code',
+              data: 'This is a test',
+              format: 'raw'
+             }
            ]
          },
          headers: headers
@@ -44,8 +50,11 @@ RSpec.describe 'Session', type: :request do
     post '/encoded/api',
          params: {
            codes: [
-             type: 'code_25',
-             data: '1234567890'
+             {
+              type: 'code_25',
+              data: '1234567890',
+              format: 'raw'
+             }
            ]
          },
          headers: headers
@@ -59,8 +68,10 @@ RSpec.describe 'Session', type: :request do
     post '/encoded/api',
          params: {
            codes: [
-             type: 'foo',
-             data: '12345'
+             {
+              type: 'foo',
+              data: '12345'
+             }
            ]
          },
          headers: headers

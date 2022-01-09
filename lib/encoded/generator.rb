@@ -28,8 +28,7 @@ module Encoded
 
     def generate
       code = encoder.new(@data)
-      output = outputter(code)
-      raw64 = Base64.strict_encode64(output).force_encoding('UTF-8')
+      raw64 = outputter(code)
       {
         base_64: raw64,
         data: data,
@@ -56,10 +55,16 @@ module Encoded
     def outputter(code)
       case @format
       when 'png'
-        code.to_png
+        "data:image/png;base64,#{to_64(code.to_png)}"
+      when 'raw'
+        to_64(code.to_png)
       else
         raise NotImplementedError, "#{@format} is not an implemented format"
       end
+    end
+
+    def to_64(str)
+      Base64.strict_encode64(str).force_encoding('UTF-8')
     end
   end
 end
