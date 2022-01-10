@@ -3,10 +3,6 @@ module Encoded
     skip_before_action :verify_authenticity_token
     before_action :authenticate_request!
 
-    def index
-      render json: [], status: :ok
-    end
-
     def create
       assert_request_body! and return
       assert_limit! and return
@@ -34,9 +30,13 @@ module Encoded
           ).generate
         end
       send_data Base64.strict_decode64(encoded['raw_base_64']).force_encoding('UTF-8'),
-        type: 'image/png',
-        filename: "#{SecureRandom.hex(4)}.png",
-        disposition: 'attachment'
+                type: 'image/png',
+                filename: "#{SecureRandom.hex(4)}.png",
+                disposition: 'attachment'
+    rescue NotImplementedError => e
+      render json: { error: e.message }, status: :not_implemented
+    rescue StandardError => e
+      render json: { error: e.message }, status: :internal_server_error
     end
 
     private
@@ -58,7 +58,7 @@ module Encoded
       if permitted_params[:codes].blank?
         render(
           json: {
-            error: "Invalid request body"
+            error: 'Invalid request body'
           },
           status: :unprocessable_entity
         )
