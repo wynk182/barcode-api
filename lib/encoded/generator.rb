@@ -2,12 +2,13 @@ require_relative 'barby_loader'
 
 module Encoded
   class Generator
-    attr_reader :data, :type, :format
+    attr_reader :data, :type, :format, :size
 
     class << self
       def generate(args)
         args['codes'].map do |code|
           new(
+            size: code['size'],
             data: code['data'],
             type: code['type'],
             format: code['format'].presence || 'png'
@@ -16,14 +17,15 @@ module Encoded
       end
     end
 
-    def initialize(data:, type:, format:)
+    def initialize(data:, type:, format:, size:)
       @data = data
       @type = type
       @format = format
+      @size = size
     end
 
     def generate
-      code = encoder.new(@data)
+      code = encoder.new(@data, { size: size })
       output = outputter(code)
       {
         format => output,
