@@ -15,7 +15,7 @@ module Encoded
         Rails.cache.fetch(cache_key, expires_in: 1.hour) do
           Encoded::Generator.generate(permitted_params)
         end
-      render json: encoded, status: :ok
+      render json: { codes: encoded }, status: :ok
     rescue NotImplementedError => e
       render json: { error: e.message }, status: :not_implemented
     rescue StandardError => e

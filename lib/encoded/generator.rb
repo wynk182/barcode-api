@@ -1,8 +1,4 @@
-require 'barby'
-require 'barby/barcode/code_128'
-require 'barby/barcode/code_25'
-require 'barby/barcode/qr_code'
-require 'barby/outputter/png_outputter'
+require_relative 'barby_loader'
 
 module Encoded
   class Generator
@@ -28,9 +24,9 @@ module Encoded
 
     def generate
       code = encoder.new(@data)
-      raw64 = outputter(code)
+      output = outputter(code)
       {
-        base_64: raw64,
+        format => output,
         data: data,
         format: format,
         type: type
@@ -41,12 +37,30 @@ module Encoded
 
     def encoder
       case @type
-      when 'code_128'
+      when 'code_128a'
+        Barby::Code128A
+      when 'code_128b'
         Barby::Code128B
+      when 'code_128c'
+        Barby::Code128C
       when 'qr_code'
         Barby::QrCode
       when 'code_25'
         Barby::Code25
+      when 'code_25_interleaved'
+        Barby::Code25Interleaved
+      when 'code_25_iata'
+        Barby::Code25IATA
+      when 'code_39'
+        Barby::Code39
+      when 'code_93'
+        Barby::Code93
+      when 'ean_13'
+        Barby::EAN13
+      when 'ean_8'
+        Barby::EAN8
+      when 'gs1_128'
+        Barby::GS1128
       else
         raise NotImplementedError, "#{@type} is not an implemented encoder"
       end
@@ -56,8 +70,12 @@ module Encoded
       case @format
       when 'png'
         "data:image/png;base64,#{to_64(code.to_png)}"
-      when 'raw'
+      when 'raw_base_64'
         to_64(code.to_png)
+      when 'svg'
+        code.to_svg
+      when 'html'
+        code.to_html
       else
         raise NotImplementedError, "#{@format} is not an implemented format"
       end
