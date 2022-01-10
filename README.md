@@ -36,7 +36,7 @@ By default the api will respond with a base 64 encoded `png` and will contain `d
 
 | Format          | Parameter     |
 | --------------- | ------------- |
-| PNG             | `png`         |
+| PNG base 64     | `png`         |
 | Raw PNG base 64 | `raw_base_64` |
 | HTML            | `html`        |
 | SVG             | `svg`         |

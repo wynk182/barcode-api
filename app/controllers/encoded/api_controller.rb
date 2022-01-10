@@ -70,11 +70,14 @@ module Encoded
     end
 
     def cache_key
-      request.body.to_s.hash
+      [
+        permitted_params.to_h,
+        download_params.to_h
+      ].hash
     end
 
     def download_params
-      params.permit(:data, :type, :format, :size, :css_class)
+      params.permit(:data, :type, :size)
     end
 
     def permitted_params
