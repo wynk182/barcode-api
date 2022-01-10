@@ -22,6 +22,23 @@ module Encoded
       render json: { error: e.message }, status: :internal_server_error
     end
 
+    def download
+      encoded =
+        Rails.cache.fetch(cache_key, expires_in: 1.hour) do
+          Encoded::Generator.new(
+            data: download_params[:data],
+            type: download_params[:type],
+            size: download_params[:size],
+            format: 'raw_base_64',
+            css_class: nil
+          ).generate
+        end
+      send_data Base64.strict_decode64(encoded['raw_base_64']).force_encoding('UTF-8'),
+        type: 'image/png',
+        filename: "#{SecureRandom.hex(4)}.png",
+        disposition: 'attachment'
+    end
+
     private
 
     def assert_limit!
@@ -54,6 +71,10 @@ module Encoded
 
     def cache_key
       request.body.to_s.hash
+    end
+
+    def download_params
+      params.permit(:data, :type, :format, :size, :css_class)
     end
 
     def permitted_params

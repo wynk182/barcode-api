@@ -194,6 +194,13 @@ RSpec.describe 'Session', type: :request do
     expect(Base64.strict_decode64(body['codes'].first['raw_base_64']).force_encoding('UTF-8')).to \
       eq IO.read(file_fixture('test_qr_size_5.png'))
   end
+
+  it 'requests a download able image' do
+    get '/encoded/api/download?type=qr_code&data=1234567890&size=10', headers: headers
+    expect(response.status).to eq 200
+    expect(response.body).to \
+      eq IO.read(file_fixture('download_qr.png'))
+  end
 end
 
 # File.open('test_qr.png', 'w') do |f|

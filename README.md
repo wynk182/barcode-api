@@ -68,5 +68,5 @@ curl "https://www.wynk182.com/encoded/api" \
 
 ### Add barcode to a webpage
 ```html
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAtAQAAAAASYd83AAAAm0lEQVR4nGP6DwI/mBjAgHzqYO5EBSAlz8J+AEh9urq3ASQn5wBWIgJWwveDGST48NlOByBln7/+AZA66scBEuRsvJAApMSq34DkPp0RWQCk3jqtBimxWRMCErzv0Aui2GougeTeP/MG8XQLY0C8g8U7QDbIfzkB1s6VAnIEgyoHSDvDg6sgo/l+bwfxHvIeB1H2y54kUOBbMAAAw7s3TiFroBUAAAAASUVORK5CYII=" width="400px" height="400px" />
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAtAQAAAAASYd83AAAAm0lEQVR4nGP6DwI/mBjAgHzqYO5EBSAlz8J+AEh9urq3ASQn5wBWIgJWwveDGST48NlOByBln7/+AZA66scBEuRsvJAApMSq34DkPp0RWQCk3jqtBimxWRMCErzv0Aui2GougeTeP/MG8XQLY0C8g8U7QDbIfzkB1s6VAnIEgyoHSDvDg6sgo/l+bwfxHvIeB1H2y54kUOBbMAAAw7s3TiFroBUAAAAASUVORK5CYII=" width="100px" height="100px" />
 ```
