@@ -57,7 +57,7 @@ module Encoded
     end
 
     def permitted_params
-      params.permit(codes: %i[data type format, :size])
+      params.permit(codes: %i[data type format size css_class])
     end
 
     def valid_api_key?

@@ -138,6 +138,26 @@ RSpec.describe 'Session', type: :request do
       eq IO.read(file_fixture('test_128.html'))
   end
 
+  it 'requests an html barcode with a css class' do
+    post '/encoded/api',
+         params: {
+           codes: [
+             {
+               type: 'code_128a',
+               data: '123456',
+               format: 'html',
+               css_class: 'test-class'
+             }
+           ]
+         },
+         headers: headers
+    expect(response.status).to eq 200
+    body = JSON.parse(response.body)
+    expect(body['codes'].first['html']).to include 'test-class'
+    expect(body['codes'].first['html']).to \
+      eq IO.read(file_fixture('test_html_class.html'))
+  end
+
   it 'requests an svg barcode' do
     post '/encoded/api',
          params: {
@@ -154,6 +174,25 @@ RSpec.describe 'Session', type: :request do
     body = JSON.parse(response.body)
     expect(body['codes'].first['svg']).to \
       eq IO.read(file_fixture('test_93.svg'))
+  end
+
+  it 'requests an qr_code png barcode with specific size' do
+    post '/encoded/api',
+         params: {
+           codes: [
+             {
+               type: 'qr_code',
+               data: '123456789012345678901234567890123456789012345678901234567890',
+               format: 'raw_base_64',
+               size: 5
+             }
+           ]
+         },
+         headers: headers
+    expect(response.status).to eq 200
+    body = JSON.parse(response.body)
+    expect(Base64.strict_decode64(body['codes'].first['raw_base_64']).force_encoding('UTF-8')).to \
+      eq IO.read(file_fixture('test_qr_size_5.png'))
   end
 end
 
