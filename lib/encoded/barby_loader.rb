@@ -16,3 +16,7 @@ require 'barby/barcode/upc_supplemental'
 require 'barby/outputter/png_outputter'
 require 'barby/outputter/html_outputter'
 require 'barby/outputter/svg_outputter'
+
+module Encoded
+  class BarbyLoader; end
+end
